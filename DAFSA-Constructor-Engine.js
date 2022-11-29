@@ -1,31 +1,25 @@
 class Node {
-    constructor(name, children, isEnd) {
-      let obj = {};
-      children = obj;
-  
-      this.name = name;
-      this.children = children;
+    constructor(nodeIndex, nodeChildren, isEnd) {
+      this.nodeIndex = nodeIndex;
+      this.nodeChildren = nodeChildren;
       this.isEnd = false;
     }
   }
   
   class Transition {
-    constructor(currentNode, nextNodes, character) {
-      if (!(typeof character === "string" || character instanceof String))
-        throw new Error("Expected a string symbol");
-  
-      this.currentNode = currentNode;
-      this.nextNodes = nextNodes;
-      this.character = character;
+    constructor(transitionCurrent, transitionNext, transitionCharacter) {  
+      this.transitionCurrent = transitionCurrent;
+      this.transitionNext = transitionNext;
+      this.transitionCharacter = transitionCharacter;
     }
   }
   
   class Trie {
-    constructor(root, nodes, finalNodes, transitions) {
-      this.root = new Node("root", [], false);
-      this.transitions = [];
-      this.finalNodes = [];
-      this.nodes = [];
+    constructor(trieRoot, trieNodes, trieFinalNodes, trieTransitions) {
+      this.trieRoot = new Node("trieRoot", [], false);
+      this.trieNodes = [];
+      this.trieFinalNodes = [];
+      this.trieTransitions = [];
     }
   }
   
@@ -33,74 +27,60 @@ class Node {
   let trie = new Trie();
   
   function constructDafsa(userLanguage) {
-    userLanguage = userLanguage.split(","); // split the string into an array of characters
+    userLanguage = userLanguage.split(","); // split the input into an array on each comma
     console.log(userLanguage);
-    let i = 0;
+    let nodeCount = 0; // keep track of the count of nodes
     //for every word in userLanguage
-    for (let j = 0; j < userLanguage.length; j++) {
-      let currentState = trie.root;
-      userLanguage[j] = userLanguage[j].replaceAll(" ", "");
+    for (let iterator = 0; iterator < userLanguage.length; iterator++) {
+      let currentState = trie.trieRoot;
+      userLanguage[iterator] = userLanguage[iterator].replaceAll(" ", "");
   
-      userLanguage[j].split("").forEach((character) => {
+      userLanguage[iterator].split("").forEach((currentChar) => {
         let prev = currentState;
-        //if character does not exist in children of currentState node
-        if (!currentState.children[character]) {
-          //add character to children of currentState node
-          i += 1;
-          currentState.children[character] = new Node(i, [], false);
-          trie.nodes.push(currentState.children[character].name);
-          let transition = new Transition(
-            prev.name,
-            currentState.children[character].name,
-            character
-          );
-          trie.transitions.push(transition);
-          console.log(trie.transitions);
+        //if character does not exist in nodeChildren of currentState node
+        if (!currentState.nodeChildren[currentChar]) {
+          //add character to nodeChildren of currentState node
+          nodeCount++; // increment nodeCount
+
+          currentState.nodeChildren[currentChar] = new Node(nodeCount, [], false); // create a new node with the current character as the nodeIndex
+
+          trie.trieNodes.push(currentState.nodeChildren[currentChar].nodeIndex); // add the nodeIndex to the trieNodes array
+          
+          let transition = new Transition(prev.nodeIndex, currentState. nodeChildren[currentChar].nodeIndex,currentChar); // create a new transition with the current character as the transitionCharacter
+
+          trie.trieTransitions.push(transition); // add the transition to the trieTransitions array
+
+          console.log("trieTransitions", trie.trieTransitions);
           console.log("transition", transition);
-        }
-        console.log(
-          "children of",
-          currentState.name,
-          "are",
-          currentState.children[character].name
-        );        
+        }      
+        console.log(`State ${currentState.nodeIndex} has children: ${currentState.nodeChildren[currentChar].nodeIndex}`);
         //move to next node
-        currentState = currentState.children[character];
+        currentState = currentState.nodeChildren[currentChar]; // set the currentState to the nodeChildren of the current node (as in move to the next node)
       });
   
-      i = currentState.name;
-      trie.finalNodes.push(currentState.name);
-      //mark currentState node as end of word
-      currentState.isEnd = true;
+      nodeCount = currentState.nodeIndex; // set the nodeCount to the nodeIndex of the current node
+      trie.trieFinalNodes.push(currentState.nodeIndex); // add the nodeIndex of the current node to the trieFinalNodes array     
+      currentState.isEnd = true; //mark currentState node as end of word
     }
     console.log("trie", trie);
-    toDotString(trie);
+    // toDotString(trie);
+    return trie;
   }
   
   function toDotString(trie) {
-    let dotStr = "digraph fsm {\n";
-    // dotStr += 'size="8,5";\n';
-    dotStr += "node [shape = point]; INITIAL_STATE\n";
-    dotStr += "node [shape = doublecircle]; " + trie.finalNodes.join(",") + ";\n";
-    dotStr += "node [shape = circle];\n";
-    dotStr += "INITIAL_STATE -> " + "root" + ";\n";
+    let dotString = "digraph userDafsa {\n";
+    // dotString += 'size="8,5";\n';
+    dotString += "node [shape = point]; INITIAL_STATE\n";
+    dotString += "node [shape = doublecircle]; " + trie.trieFinalNodes.join(",") + ";\n";
+    dotString += "node [shape = circle];\n";
+    dotString += "INITIAL_STATE -> " + "trieRoot" + ";\n";
   
-    for (let i = 0; i < trie.transitions?.length; i++) {
-      let t = trie.transitions[i];
-  
-      dotStr +=
-        "" +
-        t.currentNode +
-        " -> " +
-        t.nextNodes +
-        " [label=" +
-        t.character +
-        "];\n";
+    for (let i = 0; i < trie.trieTransitions?.length; i++) {
+      let currentTransition = trie.trieTransitions[i];  
+      dotString += `${currentTransition.transitionCurrent} -> ${currentTransition.transitionNext} [ label = "${currentTransition.transitionCharacter}" ];\n`;
     }
   
-    dotStr += "}";
-  
-    d3.select("#dafsa-result").graphviz().renderDot(dotStr);
-    return dotStr;
+    dotString += "}";
+    return dotString;
   }
   

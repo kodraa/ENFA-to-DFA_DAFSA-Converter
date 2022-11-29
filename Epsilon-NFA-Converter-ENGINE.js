@@ -549,9 +549,9 @@ function checkString(string, transitions, initialState) {
     console.log("transitions are", transitions);
     let data = transitions.filter(
       t => {
-        // console.log("t.state is == currentState", t.state == currentState);
-        // console.log("t.symbol is", t.symbol);
-        // console.log("char is", char);
+        console.log("t.state is == currentState", t.state == currentState);
+        console.log("t.symbol is", t.symbol);
+        console.log("char is", char);
         console.log("t.symbol is == char", t.symbol == char);
         console.log("t", t)
         return t.state == currentState && t.symbol == char
