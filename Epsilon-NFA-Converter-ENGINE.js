@@ -542,6 +542,7 @@ function checkString(string, transitions, INITIAL_STATE) {
   // Initialize the current state to INITIAL_STATE
   let currentState = INITIAL_STATE;
   console.log("current state is", currentState);
+  console.log("string is", string);
   //loop on each character of string
   let currentchar = string.split("").map((char) => {
     //take variable of reachable state

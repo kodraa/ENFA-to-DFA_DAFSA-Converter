@@ -21,6 +21,30 @@
   color: red;
 }
 
+#acceptedStringInput-btn{
+  color: blue;
+  margin-left: 10px;
+}
+
+.acceptedStringInput-result{
+  margin-left: 10px;
+  display: none;
+}
+
+.acceptedStringInput-result.active{
+  display: inline;
+}
+
+.acceptedStringInput-result.active.success{
+  outline: 1px solid green;
+  color: green;
+}
+
+.acceptedStringInput-result.active.fail{
+  outline: 1px solid red;
+  color: red;
+}
+
 .col-xs-nt,
 .col-xs-pr {
   min-height: 1px;
@@ -73,7 +97,7 @@ span.remove-button {
 }
 
 span.remove-button:hover {
-  background: #555555;
+  background: transparent;
   border-radius: 10px;
   color: #aaaaaa;
   cursor: pointer;

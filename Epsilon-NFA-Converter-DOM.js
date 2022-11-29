@@ -1,5 +1,6 @@
 const acceptedString = document.getElementById('acceptedStringInput');
-
+const acceptedStringBtn = document.getElementById('acceptedStringInput-btn');
+const acceptedStringResult = document.querySelector('.acceptedStringInput-result');
 class UserInput {
   constructor(initialState, finalStates, states, alphabet, transitions) {
     this.initialState = initialState;
@@ -271,8 +272,8 @@ $(document).ready(function () {
 
   
 
-  acceptedString.addEventListener('change',(e)=>{    
-    let string = e.target.value;
+  acceptedStringBtn.addEventListener('click',(e)=>{    
+    let string = acceptedString.value;
     // console.log("string",string);
     let transitions = minimizedMachine.transitions;
     // console.log("transitions",transitions);
@@ -282,6 +283,14 @@ $(document).ready(function () {
     // console.log("finalStates",finalStates);
     let result = checkString(string, transitions, initialState);
     // console.log("result",result);
-    checkFinalState(initialState, result, transitions, finalStates)? alert('accepted'): alert('rejected');
+    let accepted = checkFinalState(initialState, result, transitions, finalStates);
+
+    console.log(acceptedStringResult)
+
+    acceptedStringResult.setAttribute('class', (accepted ? 'btn acceptedStringInput-result success' : 'btn acceptedStringInput-result fail'));
+    
+    acceptedStringResult.classList.add('active');
+
+    acceptedStringResult.innerText = accepted ? "Accepted" : "Rejected";
   })
 });
