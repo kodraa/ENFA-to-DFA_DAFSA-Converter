@@ -47,7 +47,6 @@ class NFA {
       transitions = arr;
     }
 
-    // TODO Make sure states cannot be named INITIAL_STATE
 
     this.initialState = initialState;
     this.finalStates = finalStates;
@@ -538,9 +537,10 @@ function arraysEqual(a, b) {
 
 // accepted string
 
-function checkString(string, transitions, INITIAL_STATE) {
-  // Initialize the current state to INITIAL_STATE
-  let currentState = INITIAL_STATE;
+function checkString(string, transitions, initialState) {
+  if(string.length === 0) return initialState;
+  // Initialize the current state to initialState
+  let currentState = initialState;
   console.log("current state is", currentState);
   console.log("string is", string);
   //loop on each character of string
