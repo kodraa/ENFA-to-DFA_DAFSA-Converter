@@ -24,7 +24,7 @@ $(document).ready(function () {
   let removeButton = $(".remove-button");
 
   // Hide all remove buttons initially
-  removeButton.hide();
+  // removeButton.hide();
   // Register onClick() event for remove buttons
   removeButton.click(function () {
     let parent = $(this).parent();

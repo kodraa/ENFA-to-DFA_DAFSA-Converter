@@ -45,6 +45,11 @@
   color: red;
 }
 
+#nfa-transitions{
+  font-size: small;
+  color: rgb(137, 137, 137); 
+}
+
 .col-xs-nt,
 .col-xs-pr {
   min-height: 1px;
@@ -69,7 +74,6 @@ div.arrow,
 div.or,
 div.remove {
   display: inline-block;
-  float: left;
   font-size: 20px;
   height: 34px;
   line-height: 34px;
