@@ -281,9 +281,9 @@ $(document).ready(function () {
     // console.log("initialState",initialState);
     let finalStates = minimizedMachine.finalStates;
     // console.log("finalStates",finalStates);
-    let result = checkString(string, transitions, initialState);
+    let result = stringEndsAtWhichState(string, transitions, initialState);
     // console.log("result",result);
-    let accepted = checkFinalState(initialState, result, transitions, finalStates);
+    let accepted = isResultStateFinal(result, transitions, finalStates);
 
     console.log(acceptedStringResult)
 

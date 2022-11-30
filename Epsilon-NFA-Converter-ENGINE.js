@@ -537,30 +537,30 @@ function arraysEqual(a, b) {
 
 // accepted string
 
-function checkString(string, transitions, initialState) {
-  if(string.length === 0) return initialState;
+function stringEndsAtWhichState(userTestString, transitions, initialState) {
+  if(userTestString.length === 0) return initialState; // empty string
   // Initialize the current state to initialState
   let currentState = initialState;
-  console.log("current state is", currentState);
-  console.log("string is", string);
-  //loop on each character of string
-  let currentchar = string.split("").map((char) => {
+  console.log("currentState is", currentState);
+  console.log("userTestString is", userTestString);
+  //loop on each character of userTestString
+  let temp = userTestString.split("").map((singleChar) => {
     //take variable of reachable state
     console.log("transitions are", transitions);
-    let data = transitions.filter(
-      t => {
-        console.log("t.state is == currentState", t.state == currentState);
-        console.log("t.symbol is", t.symbol);
-        console.log("char is", char);
-        console.log("t.symbol is == char", t.symbol == char);
-        console.log("t", t)
-        return t.state == currentState && t.symbol == char
+    let matchingTransitions = transitions.filter(
+      singleTransition => {
+        console.log("singleTransition.state is == currentState", singleTransition.state == currentState);
+        console.log("singleTransition.symbol is", singleTransition.symbol);
+        console.log("singleChar is", singleChar);
+        console.log("singleTransition.symbol is == singleChar", singleTransition.symbol == singleChar);
+        console.log("t", singleTransition)
+        return singleTransition.state == currentState && singleTransition.symbol == singleChar
       }
     );
 
-    console.log("Data", data);
+    console.log("Data", matchingTransitions);
 
-    const currentObject = new Object(...data);
+    const currentObject = new Object(...matchingTransitions);
     console.log("current object is", currentObject);
 
     // //changes the current state to where a character reached
@@ -580,32 +580,30 @@ function checkString(string, transitions, initialState) {
   return currentState;
 }
 
-function checkFinalState(initialState, currentState, transitions, finalNode) {
-  if (currentState.length > 0) {
-    console.log("RESULT STATE IS", currentState);
+function isResultStateFinal(resultState, transitions, finalNode) {
+  if (resultState.length > 0) {
+    console.log("result state / current state is", resultState);
     let object = new Object(
       ...transitions.filter(
         (singleTransition) => {
-          console.log("t.state", singleTransition);
-          return singleTransition.state.replaceAll(",", "").replace(/[{}]/g, "") == currentState
+          console.log("singleTransition.state", singleTransition);
+          return singleTransition.state.replaceAll(",", "").replace(/[{}]/g, "") == resultState
         }
       )
     );
     console.log("current state object is", object);
     // let newcurrState = object.state ? object.state : [];
-    let newState = object.state.replaceAll(",", "").replace(/[{}]/g, "");
+    let newState = object.state.replaceAll(",", "").replace(/[{}]/g, ""); //remove curly braces, square brackets and commas
     console.log("newState", newState);
 
-    console.log(
-      "NEW CURRENT IS",
-      newState,
-      "and FINAL STATES ",
-      finalNode
-    );
+    console.log("new state is" + newState );
+    console.log("final states / nodes are " + finalNode);
     //map state array to check if it contains final state
 
-    if (finalNode.includes(newState)) {
-      return true;
-    } else return false;
+        return finalNode.includes(newState);
+
+    // if (finalNode.includes(newState)) {
+    //   return true;
+    // } else return false;
   }
 }
